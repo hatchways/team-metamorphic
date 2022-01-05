@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import NavAppBar from '../Appbar/NavAppBar';
 import AppDrawer from '../AppDrawer/AppDrawer';
@@ -20,12 +20,14 @@ interface AppLayoutProps {
  * @returns {JSX.Element}
  */
 export default function AppLayout({ children }: AppLayoutProps): JSX.Element {
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   return (
     <Box>
       <Navbar />
-      <NavAppBar onClickMenu={() => setOpenDrawer(true)} />
-      <AppDrawer setOpenDrawer={setOpenDrawer} openDrawer={openDrawer} />
+      <NavAppBar onClickMenu={() => setOpen(true)} />
+      <AppDrawer open={open} onClick={() => setOpen(false)}>
+        <Typography variant="h6">Drawer</Typography>
+      </AppDrawer>
       <Box>{children}</Box>
     </Box>
   );

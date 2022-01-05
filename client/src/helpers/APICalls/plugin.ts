@@ -1,5 +1,5 @@
 import { FetchOptions } from '../../interface/FetchOptions';
-import { ICardResponse } from '../../interface/Board';
+import { ICardResponse } from '../../interface/Boards';
 
 export async function saveCheckListItem(checklistItem: string): Promise<ICardResponse> {
   const fetchOptions: FetchOptions = {

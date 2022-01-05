@@ -14,7 +14,6 @@
   },
   "card": {
     "cardTitle": "New Card",
-    "description": "",
-    "tagColor": "green"
+    "description": ""
   }
 }

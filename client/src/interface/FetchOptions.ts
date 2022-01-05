@@ -6,8 +6,3 @@ export interface FetchOptions {
   body?: string;
   credentials: RequestCredentials;
 }
-
-export interface IResponse {
-  success: boolean;
-  error?: { message: string };
-}

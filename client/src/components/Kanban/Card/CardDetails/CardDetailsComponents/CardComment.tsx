@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, TextareaAutosize, CircularProgress } from '@material-ui/core';
 import Button from '@mui/material/Button';
 import DialogContentText from '@mui/material/DialogContentText';
-import { updateCardItem, deleteCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
+import { saveCardItem, deleteCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
 import { IIds } from '../../../../../interface/Board';
 import { useSnackBar } from '../../../../../context/useSnackbarContext';
 import { useBoard } from '../../../../../context/useBoardContext';
@@ -32,9 +32,7 @@ export default function CardComment({ comment, disableSetting, ids }: Props): JS
 
   const handleSaveComment = async (): Promise<void> => {
     setIsSubmitting(true);
-    updateCardItem('comment', newComment, ids).then((data) => {
-      console.log(data, 'data');
-
+    saveCardItem('comment', newComment, ids).then((data) => {
       if (data.error) {
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
@@ -55,7 +53,6 @@ export default function CardComment({ comment, disableSetting, ids }: Props): JS
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
         updateBoard();
-        updateSnackBarMessage('comment has been updated');
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
@@ -78,9 +75,8 @@ export default function CardComment({ comment, disableSetting, ids }: Props): JS
         <Box className={classes.textAreaContainer}>
           <TextareaAutosize
             value={newComment}
-            style={{ padding: '10px' }}
             aria-label="minimum height"
-            placeholder="There is no Comment for this card"
+            placeholder="There is no description for this card"
             className={classes.textArea}
             disabled={disableSetting}
             onChange={(e) => setNewComment(e.target.value)}

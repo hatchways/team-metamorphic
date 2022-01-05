@@ -1,23 +1,21 @@
-const express = require('express')
-const router = express.Router()
-const protect = require('../middleware/auth')
+const express = require("express");
+const router = express.Router();
+const protect = require("../middleware/auth");
 const {
   validateRemoveBoardParams,
-  validateAddBoardParams
-} = require('../middleware/validateRouteParams')
+  validateAddBoardParams,
+} = require("../middleware/validateRouteParams");
 const {
   createDefaultBoard,
   addBoard,
   removeBoard,
-  getUserBoard
-} = require('../controllers/board')
+} = require("../controllers/board");
 
-router.route('/user').get(protect, getUserBoard)
-router.route('/create/default-board').get(protect, createDefaultBoard)
+router.route("/create/default-board").post(protect, createDefaultBoard);
 router
-  .route('/create/:boardTitle')
-  .post(protect, validateAddBoardParams, addBoard)
+  .route("/create/:boardTitle")
+  .post(protect, validateAddBoardParams, addBoard);
 router
-  .route('/remove/:boardId')
-  .delete(protect, validateRemoveBoardParams, removeBoard)
-module.exports = router
+  .route("/remove/:boardId")
+  .delete(protect, validateRemoveBoardParams, removeBoard);
+module.exports = router;

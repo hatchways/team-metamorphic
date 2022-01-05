@@ -2,32 +2,32 @@ import useStyles from '../../useStyles';
 import { useEffect, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { TextField } from '@mui/material';
-import { updateCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
+import { saveCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
 import { IIds } from '../../../../../interface/Board';
 import { useSnackBar } from '../../../../../context/useSnackbarContext';
 import { useBoard } from '../../../../../context/useBoardContext';
 
 interface Props {
-  cardTitle: string | undefined;
+  name: string | undefined;
   disableSetting: boolean;
   ids: IIds | undefined;
 }
 
-export default function CardTitle({ cardTitle, disableSetting, ids }: Props): JSX.Element {
+export default function CardTitle({ name, disableSetting, ids }: Props): JSX.Element {
   const classes = useStyles();
   const { updateSnackBarMessage } = useSnackBar();
-  const [title, setTitle] = useState(cardTitle);
+  const [title, setTitle] = useState(name);
   const [enableTitleEdit, setEnableTitleEdit] = useState(false);
   const { updateBoard } = useBoard();
 
   useEffect(() => {
-    if (cardTitle) {
-      setTitle(cardTitle);
+    if (name) {
+      setTitle(name);
     }
-  }, [cardTitle]);
+  }, [name]);
   const handleSaveTitle = async (): Promise<void> => {
     setEnableTitleEdit(false);
-    updateCardItem('cardTitle', title, ids).then((data) => {
+    saveCardItem('title', title, ids).then((data) => {
       if (data.error) {
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
@@ -35,6 +35,7 @@ export default function CardTitle({ cardTitle, disableSetting, ids }: Props): JS
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
+
         updateSnackBarMessage('An unexpected error occurred. Please try again');
       }
     });
