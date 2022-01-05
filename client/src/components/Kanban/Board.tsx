@@ -14,10 +14,10 @@ const Board = (): JSX.Element => {
               {columns.map((column, index) => (
                 <>
                   <ColumnComponent
-                    key={column._id}
+                    key={column.id}
                     index={index}
-                    _id={column._id}
-                    columnTitle={column.columnTitle}
+                    id={column.id}
+                    name={column.name}
                     cards={column.cards}
                     createdAt={column.createdAt}
                   />

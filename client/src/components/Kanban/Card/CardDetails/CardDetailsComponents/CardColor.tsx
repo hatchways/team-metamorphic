@@ -4,21 +4,21 @@ import { Box } from '@material-ui/core';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { updateCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
+import { saveCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
 import { IIds } from '../../../../../interface/Board';
 import { useSnackBar } from '../../../../../context/useSnackbarContext';
 import { useBoard } from '../../../../../context/useBoardContext';
 
 interface Props {
-  tagColor: string | undefined;
+  tag: string | undefined;
   disableSetting: boolean;
   ids: IIds | undefined;
 }
 
-export default function CardColor({ tagColor, disableSetting, ids }: Props): JSX.Element {
+export default function CardColor({ tag, disableSetting, ids }: Props): JSX.Element {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [colorTag, setColorTag] = useState(tagColor);
+  const [colorTag, setColorTag] = useState(tag);
   const colors = ['#fcba03', '#5de3c4', '#de602f', '#de2fcf', '#494bd6'];
   const open = Boolean(anchorEl);
   const { updateSnackBarMessage } = useSnackBar();
@@ -32,14 +32,14 @@ export default function CardColor({ tagColor, disableSetting, ids }: Props): JSX
   };
 
   useEffect(() => {
-    if (tagColor) {
-      setColorTag(tagColor);
+    if (tag) {
+      setColorTag(tag);
     }
-  }, [tagColor]);
+  }, [tag]);
 
   const handleSaveCardColor = async (colorParams: string): Promise<void> => {
     setColorTag(colorParams);
-    updateCardItem('tagColor', colorParams, ids).then((data) => {
+    saveCardItem('tagColor', colorTag, ids).then((data) => {
       if (data.error) {
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
@@ -83,8 +83,8 @@ export default function CardColor({ tagColor, disableSetting, ids }: Props): JSX
           'aria-labelledby': 'basic-button',
         }}
       >
-        {colors.map((color: string, index) => (
-          <MenuItem key={color + index} onClick={() => handleSaveCardColor(color)}>
+        {colors.map((color: string) => (
+          <MenuItem key={color} onClick={() => handleSaveCardColor(color)}>
             {' '}
             <Box className={classes.cardTagColor} style={{ width: 100, background: color, right: '10%' }}></Box>
           </MenuItem>

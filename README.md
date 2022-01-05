@@ -1,6 +1,6 @@
-## Kanban
+## Project Name
 
-This is a website that makes it easier for dog owners to find a dog sitter.
+This is a little description about your project.
 
 **Tech Stack:** MongoDB, Express.js, React.js, Node.js, Typescript
 

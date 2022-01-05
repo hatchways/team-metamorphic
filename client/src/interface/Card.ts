@@ -1,29 +1,29 @@
 export interface Card {
-  _id: string;
+  id: string;
   columnId: string;
-  cardTitle: string;
-  tagColor?: string;
-  deadline?: Date;
+  name: string;
+  tag?: string;
+  dueDate?: Date;
   description?: string;
   createdAt?: Date;
   comment?: string;
 }
 
 export interface ICard {
-  _id: string;
-  cardTitle: string;
-  tagColor?: string;
+  id: string;
+  name?: string;
+  tag?: string;
   description?: string;
   comment?: string;
-  deadline?: Date;
+  dueDate?: Date;
   checklist?: {
     item: string;
     isChecked: boolean;
-    _id: string;
+    id: string;
   }[];
   attachment?: {
     imageName: string;
     imageSource: string;
-    _id: string;
+    id: string;
   };
 }
