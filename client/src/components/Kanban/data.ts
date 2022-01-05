@@ -2,70 +2,75 @@ import { Column } from '../../interface/Column';
 
 export const columnData: Column[] = [
   {
-    id: 'col-1',
-    name: 'Philosophy',
+    _id: 'col-1',
+    columnTitle: 'Philosophy',
     createdAt: new Date(),
     cards: [
       {
-        id: 'car-1',
+        _id: 'car-1',
         columnId: 'col-1',
-        name: 'Essay on the environment',
-        tag: 'green',
+        cardTitle: 'Essay on the environment',
+        tagColor: 'green',
       },
     ],
   },
   {
-    id: 'col-2',
-    name: 'Math',
+    _id: 'col-2',
+    columnTitle: 'Math',
     createdAt: new Date(),
     cards: [
       {
-        id: 'car-2',
+        _id: 'car-2',
         columnId: 'col-2',
-        name: 'Midterm exam',
-        dueDate: new Date(),
-        tag: 'red',
+        cardTitle: 'Midterm exam',
+        deadline: new Date(),
+        tagColor: 'red',
       },
     ],
   },
   {
-    id: 'col-3',
-    name: 'In Progress',
+    _id: 'col-3',
+    columnTitle: 'In Progress',
     createdAt: new Date(),
     cards: [
       {
-        id: 'car-3',
+        _id: 'car-3',
         columnId: 'col-3',
-        name: 'Homework',
-        tag: 'red',
+        cardTitle: 'Homework',
+        tagColor: 'red',
         // other data (assignees, due dates, etc.)
       },
     ],
   },
   {
-    id: 'col-4',
-    name: 'Done',
+    _id: 'col-4',
+    columnTitle: 'Done',
     createdAt: new Date(),
     cards: [
       {
-        id: 'car-4',
+        _id: 'car-4',
         columnId: 'col-4',
-        name: 'Workshop',
-        tag: 'yellow',
+        cardTitle: 'Workshop',
+        tagColor: 'yellow',
         // other data (assignees, due dates, etc.)
       },
       {
-        id: 'car-5',
+        _id: 'car-5',
         columnId: 'col-4',
-        name: 'Practice exam',
-        tag: 'red',
+        cardTitle: 'Practice exam',
+        tagColor: 'red',
       },
       {
-        id: 'car-6',
+        _id: 'car-6',
         columnId: 'col-4',
-        name: 'Research',
-        tag: 'green',
+        cardTitle: 'Research',
+        tagColor: 'green',
       },
     ],
   },
 ];
+export const tempBoard = {
+  boardTitle: 'tempBoard',
+  _id: '1',
+  columns: columnData,
+};

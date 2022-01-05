@@ -6,50 +6,52 @@ import useColorTagStyles from '../shared/colorStyles';
 import useStyles from './useStyles';
 import CardDetails from './CardDetails/CardDetails';
 import { useState } from 'react';
+import { IIds } from '../../../interface/Board';
+import { ICard } from '../../../interface/Card';
 
 type CardProps = {
-  id: string;
-  name: string;
   columnId: string;
   index: number;
-  tag: string;
+  card: ICard;
 };
-const Card = ({ id, name, tag = 'white', columnId, index }: CardProps): JSX.Element => {
+const Card = ({ columnId, index, card }: CardProps): JSX.Element => {
   const { setOpenCard, focusedCard, focusedBoardId } = useKanban();
   const [openDialog, setOpenDialog] = useState(false);
-  const [ids, setIds] = useState({ cardId: '', columnId: '', boardId: '' });
+  const [ids, setIds] = useState<IIds>({ cardId: '', columnId: '', boardId: '' });
   const classes = useStyles();
-  const colorClasses = useColorTagStyles({ tag });
+  const colorClasses = useColorTagStyles({ tagColor: card.tagColor || 'white' });
 
-  const openCardDetails = (id: string, name: string, tag: string, columnId: string): void => {
+  const openCardDetails = (): void => {
     setOpenCard({
-      id,
-      name,
-      tag,
+      _id: card._id,
+      cardTitle: card?.cardTitle,
+      tagColor: card.tagColor,
+      deadline: card.deadline,
+      description: card.description,
+      comment: card.comment,
       columnId,
     });
     setIds({
-      cardId: id,
+      cardId: card._id,
       columnId,
       boardId: focusedBoardId,
     });
     setOpenDialog(true);
-    console.log(focusedCard);
   };
 
   return (
     <>
-      <Draggable draggableId={id} index={index}>
+      <Draggable draggableId={card._id} index={index}>
         {(provided, snapshot) => {
           return (
             <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
               <Box
-                onClick={() => openCardDetails(id, name, tag, columnId)}
+                onClick={() => openCardDetails()}
                 className={clsx(classes.card, snapshot.isDragging && classes.cardDragging)}
               >
                 <Box className={`${classes.cardTag} ${colorClasses.cardTagColor}`}></Box>
                 <Typography className={classes.typography} variant="h6">
-                  {name}
+                  {card.cardTitle}
                 </Typography>
               </Box>
             </div>

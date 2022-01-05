@@ -7,10 +7,11 @@ import CardForm from '../CardForm/CardForm';
 import useStyles from './useStyles';
 
 type ColumnProps = Column & { index: number };
-const ColumnComponent = ({ id, name, cards, index }: ColumnProps): JSX.Element => {
+const ColumnComponent = ({ _id, columnTitle, cards, index }: ColumnProps): JSX.Element => {
   const classes = useStyles();
+
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={_id} index={index}>
       {(provided) => {
         return (
           <Grid
@@ -25,27 +26,28 @@ const ColumnComponent = ({ id, name, cards, index }: ColumnProps): JSX.Element =
             <Box className={classes.columnWrapper} {...provided.dragHandleProps}>
               <Box className={classes.typographyWrapper}>
                 <Typography className={classes.typography} variant="h5">
-                  {name}
+                  {columnTitle}
                 </Typography>
               </Box>
-              <Droppable droppableId={id} type="card">
+              <Droppable droppableId={_id} type="card">
                 {(provided) => {
                   return (
                     <Grid container {...provided.droppableProps} ref={provided.innerRef} direction="column">
                       {cards.map((card: Card, index: number) => {
                         return (
                           <CardComponent
-                            key={card.id}
-                            id={card.id}
-                            columnId={card.columnId}
-                            name={card.name}
-                            tag={card.tag || 'white'}
+                            key={card._id}
+                            // cardId={card._id}
+                            columnId={_id}
+                            card={card}
+                            // cardTitle={card.cardTitle}
+                            // tagColor={card.tagColor || 'white'}
                             index={index}
                           />
                         );
                       })}
                       {provided.placeholder}
-                      <CardForm columnId={id} />
+                      <CardForm columnId={_id} />
                     </Grid>
                   );
                 }}

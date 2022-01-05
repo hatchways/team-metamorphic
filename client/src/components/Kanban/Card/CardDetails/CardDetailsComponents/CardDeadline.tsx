@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { IIds } from '../../../../../interface/Board';
 import DialogContentText from '@mui/material/DialogContentText';
-import { saveCardItem, deleteCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
+import { updateCardItem, deleteCardItem } from '../../../../../helpers/APICalls/cardApiCalls';
 import { useSnackBar } from '../../../../../context/useSnackbarContext';
 import { useState, useEffect } from 'react';
 import { useBoard } from '../../../../../context/useBoardContext';
@@ -17,23 +17,23 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 interface Props {
-  dueDate: Date | undefined;
+  deadline: Date | undefined;
   disableSetting: boolean;
   ids: IIds | undefined;
 }
 
-export default function CardDeadline({ dueDate, disableSetting, ids }: Props): JSX.Element {
+export default function CardDeadline({ deadline, disableSetting, ids }: Props): JSX.Element {
   const classes = useStyles();
-  const [date, setDate] = useState(dueDate);
+  const [date, setDate] = useState(deadline);
   const { updateSnackBarMessage } = useSnackBar();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { updateBoard, boards } = useBoard();
 
   useEffect(() => {
-    if (dueDate) {
-      setDate(dueDate);
+    if (deadline) {
+      setDate(deadline);
     }
-  }, [dueDate]);
+  }, [deadline]);
 
   const handleChange = (newValue: Date | null) => {
     if (newValue) setDate(newValue);
@@ -41,11 +41,13 @@ export default function CardDeadline({ dueDate, disableSetting, ids }: Props): J
 
   const handleSaveDeadline = async (): Promise<void> => {
     setIsSubmitting(true);
-    saveCardItem('deadline', date, ids).then((data) => {
+    updateCardItem('deadline', date, ids).then((data) => {
       if (data.error) {
         updateSnackBarMessage(data.error.message);
+        setIsSubmitting(false);
       } else if (data.success) {
         updateBoard();
+        updateSnackBarMessage('deadline has been updated');
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
@@ -89,8 +91,7 @@ export default function CardDeadline({ dueDate, disableSetting, ids }: Props): J
               value={date}
               onChange={handleChange}
               renderInput={(params) => <TextField variant="standard" sx={{ width: 250 }} {...params} />}
-
-            />           
+            />
           </LocalizationProvider>
           <Box className={classes.saveButtonContainer}>
             {' '}

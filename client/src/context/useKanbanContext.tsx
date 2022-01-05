@@ -1,25 +1,35 @@
-import { useState, useContext, createContext, FunctionComponent } from 'react';
+import { useState, useContext, createContext, FunctionComponent, useEffect } from 'react';
 import { DraggableLocation, DropResult } from 'react-beautiful-dnd';
 import { columnData } from '../components/Kanban/data';
 import { KanbanContext } from '../interface/KanbanContext';
-import { Column } from '../interface/Column';
+import { Column, IColumn } from '../interface/Column';
 import { Card } from '../interface/Card';
 import cloneDeep from 'lodash.clonedeep';
 import { useSnackBar } from './useSnackbarContext';
+import { useBoard } from './useBoardContext';
+import Board from '../components/Kanban/Board';
 
 export const KanbanContextProvider = createContext<KanbanContext>({} as KanbanContext);
 
 export const KanbanProvider: FunctionComponent = ({ children }): JSX.Element => {
   // we need to get the Id of the board, so that we can use it to manipulate the data at the backend
-  const [focusedBoardId, setFocusedBoardId] = useState('1');
-  const [columns, setColumns] = useState<Array<Column>>(columnData);
+  const { focusedBoardId, focusedColumns } = useBoard();
+  const [columns, setColumns] = useState<Array<Column>>(
+    focusedColumns,
+    // columnData,
+  );
   const [focusedCard, setFocusedCard] = useState<Card | null>(null);
   const { updateSnackBarMessage } = useSnackBar();
+
+  useEffect(() => {
+    setColumns(focusedColumns);
+  }, [focusedColumns]);
+
   const handleDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId, type } = result;
     if (!destination) return;
     const columnsCopy: Column[] = cloneDeep(columns);
-    const colIndex = columns.findIndex((col) => col.id === source.droppableId);
+    const colIndex = columns.findIndex((col) => col._id === source.droppableId);
 
     if (type === 'column') {
       // reorder the column.
@@ -39,12 +49,12 @@ export const KanbanProvider: FunctionComponent = ({ children }): JSX.Element => 
     }
 
     if (source.droppableId !== destination.droppableId) {
-      const targetColumnIndex = columnsCopy.findIndex((col) => col.id === destination.droppableId);
+      const targetColumnIndex = columnsCopy.findIndex((col) => col._id === destination.droppableId);
       if (targetColumnIndex > -1) {
         const targetColumn = columnsCopy[targetColumnIndex];
         const originalColumn = columnsCopy[colIndex];
         const [card] = originalColumn.cards.splice(source.index, 1);
-        card.columnId = targetColumn.id;
+        card.columnId = targetColumn._id;
         targetColumn.cards.splice(destination.index, 0, card);
       }
     }
@@ -66,7 +76,7 @@ export const KanbanProvider: FunctionComponent = ({ children }): JSX.Element => 
     draggableId: string,
   ): Card[] => {
     const cardsCopy = [...cards];
-    const cardIndex = cardsCopy.findIndex((card: Card) => card.id === draggableId);
+    const cardIndex = cardsCopy.findIndex((card: Card) => card._id === draggableId);
     if (cardIndex > -1) {
       const [card] = cardsCopy.splice(source.index, 1);
       cardsCopy.splice(destination.index, 0, card);
@@ -76,13 +86,13 @@ export const KanbanProvider: FunctionComponent = ({ children }): JSX.Element => 
   };
 
   const addCard = (card: Card): boolean => {
-    if (card.name === '') {
+    if (card.cardTitle === '') {
       updateSnackBarMessage('Please enter a card name');
       return false;
     }
 
     const columnsCopy = cloneDeep(columns);
-    const columnIndex = columnsCopy.findIndex((col) => col.id === card.columnId);
+    const columnIndex = columnsCopy.findIndex((col) => col._id === card.columnId);
     if (columnIndex > -1) {
       const columnCopy = cloneDeep(columns[columnIndex]);
       columnCopy.cards.push(card);
@@ -100,7 +110,7 @@ export const KanbanProvider: FunctionComponent = ({ children }): JSX.Element => 
 
   const getColumnById = (columnId: string): Column | null => {
     if (!columnId) return null;
-    const colIndex = columns.findIndex((col) => col.id === columnId);
+    const colIndex = columns.findIndex((col) => col._id === columnId);
     if (colIndex > -1) {
       return columns[colIndex];
     }
